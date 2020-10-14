@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:stocks_app/helpers/http_helper.dart';
 import 'package:stocks_app/helpers/ui_helper.dart';
 import 'package:stocks_app/models/stock.dart';
+import 'package:stocks_app/pages/stock_detail_page.dart';
 
 class StockList extends StatefulWidget {
   @override
@@ -12,11 +13,6 @@ class StockList extends StatefulWidget {
 }
 
 class _StockListState extends State {
-  @override
-  void initState() {
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Stock>>(
@@ -31,6 +27,12 @@ class _StockListState extends State {
               itemBuilder: (context, index) {
                 final stock = snapshot.data[index];
                 return ListTile(
+                  onTap: () => {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => StockDetail(stock: stock)))
+                  },
                   title: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
