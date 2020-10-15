@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:stocks_app/helpers/ui_helper.dart';
 import 'package:stocks_app/models/stock.dart';
 import 'package:stocks_app/widgets/stock_list.dart';
 
@@ -26,7 +27,7 @@ class HomePage extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      "October 11",
+                      UIHelper.formatDate(DateTime.now()).toString(),
                       style: TextStyle(
                         color: Colors.grey[500],
                         fontWeight: FontWeight.bold,

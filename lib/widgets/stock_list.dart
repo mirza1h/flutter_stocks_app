@@ -12,7 +12,7 @@ class StockList extends StatefulWidget {
   }
 }
 
-class _StockListState extends State {
+class _StockListState extends State<StockList> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Stock>>(
