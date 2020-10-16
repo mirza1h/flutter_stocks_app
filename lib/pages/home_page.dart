@@ -1,65 +1,51 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:stocks_app/helpers/ui_helper.dart';
-import 'package:stocks_app/models/stock.dart';
-import 'package:stocks_app/widgets/stock_list.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:stocks_app/pages/portfolio_page.dart';
+import 'package:stocks_app/pages/watchlist_page.dart';
 
-class HomePage extends StatelessWidget {
+import 'news_page.dart';
+import 'portfolio_page.dart';
+import 'watchlist_page.dart';
+
+class HomePage extends StatefulWidget {
+  HomePage({Key key}) : super(key: key);
+
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State {
+  int _selectedIndex = 1;
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
+  final _pages = [News(), Watchlist(), Portfolio()];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          Container(
-              padding: EdgeInsets.all(10),
-              width: MediaQuery.of(context).size.width,
-              color: Colors.black,
-              child: SafeArea(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Stocks",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 30,
-                      ),
-                    ),
-                    Text(
-                      UIHelper.formatDate(DateTime.now()).toString(),
-                      style: TextStyle(
-                        color: Colors.grey[500],
-                        fontWeight: FontWeight.bold,
-                        fontSize: 26,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 8.0),
-                      child: SizedBox(
-                        height: 50,
-                        child: TextField(
-                          decoration: InputDecoration(
-                              hintStyle: TextStyle(color: Colors.grey[700]),
-                              hintText: "Search",
-                              prefix: Icon(Icons.search),
-                              fillColor: Colors.grey[500],
-                              filled: true,
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(15),
-                                ),
-                              )),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                        height: MediaQuery.of(context).size.height,
-                        child: StockList()),
-                  ],
-                ),
-              ))
+      body: this._pages[_selectedIndex],
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: FaIcon(FontAwesomeIcons.newspaper),
+            title: Text("News"),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.list),
+            title: Text("Watchlist"),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.attach_money),
+            title: Text("My portfolio"),
+          ),
         ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.amber[800],
+        onTap: _onItemTapped,
       ),
     );
   }

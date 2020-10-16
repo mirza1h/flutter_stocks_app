@@ -41,11 +41,4 @@ class Stock {
       earningsAnnouncement: json['earningsAnnouncement'],
     );
   }
-
-  static List<Future<Stock>> getAll() {
-    List<Future<Stock>> stocks = List<Future<Stock>>();
-    Future<Stock> stock = HttpHelper.fetchStock("AAPL");
-    stocks.add(stock);
-    return stocks;
-  }
 }

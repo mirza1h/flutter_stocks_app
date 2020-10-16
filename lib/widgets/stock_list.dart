@@ -16,10 +16,12 @@ class _StockListState extends State<StockList> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Stock>>(
-        future: HttpHelper.fetchStocks("AAPL,GOOG,AMZN,MSFT,FB,NKE,TSLA"),
+        future:
+            HttpHelper.fetchStocks("AAPL,GOOG,AMZN,MSFT,FB,NKE,TSLA,CVX,DIS"),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return ListView.separated(
+              physics: const AlwaysScrollableScrollPhysics(),
               separatorBuilder: (context, index) {
                 return Divider(color: Colors.grey);
               },
@@ -39,7 +41,7 @@ class _StockListState extends State<StockList> {
                       Text(
                         "${stock.symbol}",
                         style: TextStyle(
-                          color: Colors.white,
+                          color: Colors.black,
                           fontSize: 18,
                         ),
                       ),
@@ -57,7 +59,7 @@ class _StockListState extends State<StockList> {
                       Text(
                         "\$${stock.price}",
                         style: TextStyle(
-                          color: Colors.white,
+                          color: Colors.black,
                           fontSize: 18,
                         ),
                       ),
@@ -66,6 +68,7 @@ class _StockListState extends State<StockList> {
                           width: 75,
                           height: 25,
                           decoration: BoxDecoration(
+                              color: Colors.grey[100],
                               borderRadius: BorderRadius.circular(5)),
                           child: Text(
                             "${stock.change}",

@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'package:http/http.dart' as http;
+import 'package:stocks_app/models/news.dart';
 import 'package:stocks_app/models/stock.dart';
 import 'package:stocks_app/models/stock_chart.dart';
 import 'package:stocks_app/models/stock_day.dart';
@@ -40,5 +42,22 @@ class HttpHelper {
         reversedList.map((i) => StockDay.fromJson(i).toMap()).toList();
     StockChart stockChart = StockChart(stockChart: stocks);
     return stockChart;
+  }
+
+  static Future<List<News>> fetchNews(int limit) async {
+    var url = baseURL + "stock_news?limit=" + limit.toString() + "&" + apiKey;
+    final response = await http.get(url);
+    List<News> newsList = (json.decode(response.body) as List)
+        .map((i) => News.fromJson(i))
+        .toList();
+    return newsList;
+  }
+
+  static launchURL(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 }
