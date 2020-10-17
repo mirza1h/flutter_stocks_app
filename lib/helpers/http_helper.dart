@@ -53,6 +53,21 @@ class HttpHelper {
     return newsList;
   }
 
+  static Future<List<Stock>> fetchStockSuggestions(String query) async {
+    var url = baseURL +
+        "search-ticker?" +
+        "query=" +
+        query.toUpperCase() +
+        "&limit=10&exchange=NASDAQ" +
+        "&" +
+        apiKey;
+    final response = await http.get(url);
+    List<Stock> stocks = (json.decode(response.body) as List)
+        .map((i) => Stock.fromJson(i))
+        .toList();
+    return stocks;
+  }
+
   static launchURL(String url) async {
     if (await canLaunch(url)) {
       await launch(url);

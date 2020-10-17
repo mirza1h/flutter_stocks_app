@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:stocks_app/pages/portfolio_page.dart';
 import 'package:stocks_app/pages/watchlist_page.dart';
+import 'package:stocks_app/widgets/stock_search.dart';
 
 import 'news_page.dart';
 import 'portfolio_page.dart';
@@ -27,20 +28,30 @@ class _HomePageState extends State {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.amber[800],
+        title: Text("Stocks App"),
+        actions: [
+          IconButton(
+              icon: Icon(Icons.search),
+              onPressed: () =>
+                  {showSearch(context: context, delegate: StockSearch())})
+        ],
+      ),
       body: this._pages[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: FaIcon(FontAwesomeIcons.newspaper),
-            title: Text("News"),
+            label: "News",
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.list),
-            title: Text("Watchlist"),
+            label: "Watchlist",
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.attach_money),
-            title: Text("My portfolio"),
+            label: "My portfolio",
           ),
         ],
         currentIndex: _selectedIndex,

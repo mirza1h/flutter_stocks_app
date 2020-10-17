@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:stocks_app/helpers/http_helper.dart';
 
 class NewsTile extends StatelessWidget {
   final String image, title, desc, url;
@@ -8,7 +9,9 @@ class NewsTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        HttpHelper.launchURL(url);
+      },
       child: Container(
           margin: EdgeInsets.only(bottom: 24),
           width: MediaQuery.of(context).size.width,
