@@ -15,4 +15,14 @@ class UIHelper {
     var formatter = new DateFormat('yyyy-MM-dd');
     return formatter.format(dateTime);
   }
+
+  static String truncateWithEllipsis(int cutoff, String myString) {
+    String trcString;
+    if (myString.length <= cutoff) {
+      trcString = myString;
+    } else {
+      trcString = myString.substring(0, cutoff) + "...";
+    }
+    return trcString;
+  }
 }

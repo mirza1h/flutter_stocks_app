@@ -1,5 +1,3 @@
-import 'package:stocks_app/helpers/http_helper.dart';
-
 class Stock {
   final String name;
   final String symbol;
@@ -27,6 +25,14 @@ class Stock {
       this.change});
 
   factory Stock.fromJson(Map<String, dynamic> json) {
+    var earningsAnnouncement = json['earningsAnnouncement'];
+    if (earningsAnnouncement != null) {
+      try {
+        earningsAnnouncement = earningsAnnouncement.toString().substring(0, 10);
+      } catch (e) {
+        print(e);
+      }
+    }
     return Stock(
       name: json['name'],
       symbol: json['symbol'],
@@ -38,7 +44,9 @@ class Stock {
       volume: json['volume'],
       exchange: json['exchange'],
       open: json['open'],
-      earningsAnnouncement: json['earningsAnnouncement'],
+      earningsAnnouncement: json['earningsAnnouncement'] != null
+          ? json['earningsAnnouncement']
+          : 'N/A',
     );
   }
 }

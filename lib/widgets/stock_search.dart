@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:stocks_app/helpers/http_helper.dart';
 import 'package:stocks_app/models/stock.dart';
+import 'package:stocks_app/pages/stock_detail_page.dart';
 
 class StockSearch extends SearchDelegate<String> {
   @override
@@ -36,7 +37,12 @@ class StockSearch extends SearchDelegate<String> {
                   return ListTile(
                     title: Text("${stock.symbol}"),
                     subtitle: Text("${stock.name}"),
-                    onTap: () => {print("${stock.symbol}")},
+                    onTap: () => {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => StockDetail(stock: stock)))
+                    },
                   );
                 });
           } else {

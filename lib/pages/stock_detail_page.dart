@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_candlesticks/flutter_candlesticks.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:stocks_app/helpers/http_helper.dart';
+import 'package:stocks_app/helpers/ui_helper.dart';
 import 'package:stocks_app/models/stock.dart';
 import 'package:stocks_app/models/stock_chart.dart';
+import 'package:stocks_app/widgets/stock_info.dart';
 
 class StockDetail extends StatefulWidget {
   final Stock stock;
@@ -17,7 +19,7 @@ class StockDetail extends StatefulWidget {
 
 class _StockDetailState extends State {
   Stock stock;
-  int chartTimeInterval = 365;
+  int chartTimeInterval = 90;
   _StockDetailState({this.stock});
 
   void onTimeIntervalPressed(int timeInterval) {
@@ -30,7 +32,8 @@ class _StockDetailState extends State {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(this.stock.name),
+        backgroundColor: Colors.amber[800],
+        title: Text(this.stock.name + " (" + this.stock.symbol + ")"),
       ),
       body: Column(children: [
         Container(
@@ -71,49 +74,33 @@ class _StockDetailState extends State {
             ),
           ],
         ),
-        Container(
-          margin: const EdgeInsets.all(8.0),
-          padding: const EdgeInsets.all(5.0),
-          decoration: BoxDecoration(border: Border.all(color: Colors.black)),
-          child: Text(
-              "Apple, Inc. engages in the design, manufacture...Apple, Inc. engages in the design, manufacture..."),
-        ),
-        Expanded(
-          child: ListView(children: <Widget>[
-            ListTile(
-              leading: FaIcon(FontAwesomeIcons.exchangeAlt),
-              title: Text(
-                "Exchange",
-              ),
-              trailing: Text("${stock.exchange}"),
-            ),
-            ListTile(
-              leading: FaIcon(FontAwesomeIcons.shoppingCart),
-              title: Text("Market capitalization"),
-              trailing: Text("${stock.marketCap}"),
-            ),
-            ListTile(
-              leading: FaIcon(FontAwesomeIcons.dollarSign),
-              title: Text("Day low"),
-              trailing: Text("${stock.dayLow}"),
-            ),
-            ListTile(
-              leading: FaIcon(FontAwesomeIcons.dollarSign),
-              title: Text("Day high"),
-              trailing: Text("${stock.dayHigh}"),
-            ),
-            ListTile(
-              leading: FaIcon(FontAwesomeIcons.database),
-              title: Text("Volume"),
-              trailing: Text("${stock.volume}"),
-            ),
-            ListTile(
-              leading: FaIcon(FontAwesomeIcons.businessTime),
-              title: Text("Earnings announcement"),
-              trailing: Text("${stock.earningsAnnouncement}".substring(0, 10)),
-            )
-          ]),
-        ),
+        FutureBuilder<String>(
+            future: HttpHelper.fetchStockDescription(stock.symbol),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return ExpansionTile(
+                  title: Text('Company description'),
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: Text(
+                          UIHelper.truncateWithEllipsis(800, snapshot.data)),
+                    ),
+                  ],
+                );
+              } else {
+                return Container();
+              }
+            }),
+        FutureBuilder<Object>(
+            future: HttpHelper.fetchStock(stock.symbol),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return StockInfo(snapshot.data);
+              } else {
+                return Container();
+              }
+            }),
       ]),
     );
   }

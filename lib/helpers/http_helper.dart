@@ -7,7 +7,8 @@ import 'package:stocks_app/models/stock.dart';
 import 'package:stocks_app/models/stock_chart.dart';
 import 'package:stocks_app/models/stock_day.dart';
 
-final apiKey = "apikey=0aa8fabc3a8472e2a2a6c644611d099d";
+//final apiKey = "apikey=0aa8fabc3a8472e2a2a6c644611d099d";
+final apiKey = "apikey=0f84eefd406b8a64546a654de489da30";
 final baseURL = "https://financialmodelingprep.com/api/v3/";
 
 class HttpHelper {
@@ -66,6 +67,17 @@ class HttpHelper {
         .map((i) => Stock.fromJson(i))
         .toList();
     return stocks;
+  }
+
+  static Future<String> fetchStockDescription(String ticker) async {
+    var url = baseURL + "profile/" + ticker + "?" + apiKey;
+    final response = await http.get(url);
+    final description = json.decode(response.body)[0]['description'];
+    if (description != null) {
+      return description;
+    } else {
+      return "N/A";
+    }
   }
 
   static launchURL(String url) async {
