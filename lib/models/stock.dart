@@ -45,7 +45,7 @@ class Stock {
       exchange: json['exchange'],
       open: json['open'],
       earningsAnnouncement: json['earningsAnnouncement'] != null
-          ? json['earningsAnnouncement']
+          ? json['earningsAnnouncement'].toString().substring(0, 10)
           : 'N/A',
     );
   }

@@ -2,9 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:stocks_app/helpers/http_helper.dart';
 
 class NewsTile extends StatelessWidget {
-  final String image, title, desc, url;
+  final String image, title, desc, url, site, publishedDate;
 
-  NewsTile({this.image, this.desc, this.title, this.url});
+  NewsTile(
+      {this.image,
+      this.desc,
+      this.title,
+      this.url,
+      this.site,
+      this.publishedDate});
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +44,26 @@ class NewsTile extends StatelessWidget {
                   SizedBox(
                     height: 12,
                   ),
+                  Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          site,
+                          maxLines: 2,
+                          style: TextStyle(
+                            color: Colors.black54,
+                            fontSize: 10,
+                          ),
+                        ),
+                        Text(
+                          publishedDate,
+                          maxLines: 2,
+                          style: TextStyle(
+                            color: Colors.black54,
+                            fontSize: 10,
+                          ),
+                        ),
+                      ]),
                   Text(
                     title,
                     maxLines: 2,

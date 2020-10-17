@@ -23,6 +23,8 @@ class News extends StatelessWidget {
                     image: news.image,
                     desc: news.text,
                     title: news.title,
+                    publishedDate: news.publishedDate,
+                    site: news.site,
                     url: news.url);
               },
             );
