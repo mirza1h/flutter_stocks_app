@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:stocks_app/pages/login_page.dart';
 
 import 'pages/home_page.dart';
 
@@ -11,7 +12,7 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: "Stocks",
-      home: HomePage(),
+      home: LoginPage(),
     );
   }
 }

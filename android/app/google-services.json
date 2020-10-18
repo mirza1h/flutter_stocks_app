@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "836609632062",
+    "firebase_url": "https://stocks-app-cde71.firebaseio.com",
+    "project_id": "stocks-app-cde71",
+    "storage_bucket": "stocks-app-cde71.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:836609632062:android:285219f478bb74b7682e6f",
+        "android_client_info": {
+          "package_name": "com.example.stocks_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "836609632062-30csgotodfnqmrp9ogtmgeeclhitl888.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.stocks_app",
+            "certificate_hash": "9bc78005f2153a4d03d44c8e0675a9bc98a6bdc6"
+          }
+        },
+        {
+          "client_id": "836609632062-l6bakduc22pv7q14lp988io34fagr2i8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAVZJafvR6hzRYDYiA-MCvMKwAZarfvtL4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "836609632062-l6bakduc22pv7q14lp988io34fagr2i8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
