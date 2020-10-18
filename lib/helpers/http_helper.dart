@@ -18,8 +18,12 @@ class HttpHelper {
     return Stock.fromJson(jsonDecode(response.body)[0]);
   }
 
-  static Future<List<Stock>> fetchStocks(String stockTickers) async {
-    var url = baseURL + "quote/" + stockTickers + "?" + apiKey;
+  static Future<List<Stock>> fetchStocks(List<String> stockTickers) async {
+    String queryString = "";
+    for (int i = 0; i < stockTickers.length; ++i) {
+      queryString += stockTickers[i] + ",";
+    }
+    var url = baseURL + "quote/" + queryString + "?" + apiKey;
     final response = await http.get(url);
     List<Stock> stocks = (json.decode(response.body) as List)
         .map((i) => Stock.fromJson(i))

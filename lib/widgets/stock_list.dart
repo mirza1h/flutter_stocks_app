@@ -1,23 +1,41 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:stocks_app/helpers/http_helper.dart';
 import 'package:stocks_app/helpers/ui_helper.dart';
+import 'package:stocks_app/helpers/db_helper.dart';
 import 'package:stocks_app/models/stock.dart';
 import 'package:stocks_app/pages/stock_detail_page.dart';
 
 class StockList extends StatefulWidget {
+  User user;
+  StockList(User user) {
+    this.user = user;
+  }
   @override
   State<StatefulWidget> createState() {
-    return _StockListState();
+    return _StockListState(user);
   }
 }
 
 class _StockListState extends State<StockList> {
+  User user;
+  var userWatchlist;
+  _StockListState(User user) {
+    this.user = user;
+    DbHelper.getUserWatchlist(user).then((value) {
+      if (value != null) {
+        this.userWatchlist = value;
+      } else {
+        // Default values
+        this.userWatchlist = ["AAPL", "FB", "GOOG"];
+      }
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Stock>>(
-        future:
-            HttpHelper.fetchStocks("AAPL,GOOG,AMZN,MSFT,FB,NKE,TSLA,CVX,DIS"),
+        future: HttpHelper.fetchStocks(this.userWatchlist),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return ListView.separated(

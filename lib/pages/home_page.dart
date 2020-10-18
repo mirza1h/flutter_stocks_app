@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:stocks_app/helpers/db_helper.dart';
 import 'package:stocks_app/pages/portfolio_page.dart';
 import 'package:stocks_app/pages/watchlist_page.dart';
 import 'package:stocks_app/widgets/stock_search.dart';
@@ -23,9 +24,13 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State {
   User user;
   int _selectedIndex = 1;
+  final _pages = [];
 
   _HomePageState(User user) {
     this.user = user;
+    _pages.add(News());
+    _pages.add(Watchlist(user));
+    _pages.add(Portfolio());
   }
 
   void _onItemTapped(int index) {
@@ -34,7 +39,6 @@ class _HomePageState extends State {
     });
   }
 
-  final _pages = [News(), Watchlist(), Portfolio()];
   @override
   Widget build(BuildContext context) {
     return Scaffold(

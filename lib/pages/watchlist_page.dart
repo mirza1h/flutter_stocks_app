@@ -1,8 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:stocks_app/widgets/stock_list.dart';
 
 class Watchlist extends StatelessWidget {
-  const Watchlist({Key key}) : super(key: key);
+  User user;
+  Watchlist(User user) {
+    this.user = user;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -11,6 +15,6 @@ class Watchlist extends StatelessWidget {
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
         color: Colors.white,
-        child: StockList());
+        child: StockList(user));
   }
 }
