@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_candlesticks/flutter_candlesticks.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:stocks_app/helpers/db_helper.dart';
 import 'package:stocks_app/helpers/http_helper.dart';
 import 'package:stocks_app/helpers/ui_helper.dart';
 import 'package:stocks_app/models/stock.dart';
 import 'package:stocks_app/models/stock_chart.dart';
 import 'package:stocks_app/widgets/stock_info.dart';
+
+import 'home_page.dart';
 
 class StockDetail extends StatefulWidget {
   final Stock stock;
@@ -34,6 +37,29 @@ class _StockDetailState extends State {
       appBar: AppBar(
         backgroundColor: Colors.amber[800],
         title: Text(this.stock.name + " (" + this.stock.symbol + ")"),
+        leading: new IconButton(
+            icon: new Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pushAndRemoveUntil(
+                  context,
+                  PageRouteBuilder(pageBuilder: (BuildContext context,
+                      Animation animation, Animation secondaryAnimation) {
+                    return HomePage(user: DbHelper.currentUser);
+                  }, transitionsBuilder: (BuildContext context,
+                      Animation<double> animation,
+                      Animation<double> secondaryAnimation,
+                      Widget child) {
+                    return new SlideTransition(
+                      position: new Tween<Offset>(
+                        begin: const Offset(1.0, 0.0),
+                        end: Offset.zero,
+                      ).animate(animation),
+                      child: child,
+                    );
+                  }),
+                  (Route route) => false);
+            }),
+        actions: [_actionsPopup(this.stock.symbol)],
       ),
       body: Column(children: [
         Container(
@@ -105,3 +131,26 @@ class _StockDetailState extends State {
     );
   }
 }
+
+Widget _actionsPopup(String ticker) => PopupMenuButton<int>(
+      itemBuilder: (context) => [
+        PopupMenuItem(
+          value: 1,
+          child: Text("Add to watchlist"),
+        ),
+        PopupMenuDivider(),
+        PopupMenuItem(
+          value: 3,
+          child: Text("Add to portfolio"),
+        ),
+      ],
+      onSelected: (value) {
+        if (value == 1) {
+          DbHelper.addToWatchlist(ticker);
+        } else if (value == 2) {
+          //DbHelper.removeFromWatchlist(ticker);
+        } else {
+          // DbHelper.addToPortfolio();
+        }
+      },
+    );

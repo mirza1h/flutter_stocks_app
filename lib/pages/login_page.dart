@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:stocks_app/helpers/db_helper.dart';
 import 'package:stocks_app/widgets/sign_in.dart';
 
 import 'home_page.dart';
@@ -37,6 +38,7 @@ Widget _signInButton(context) {
     onPressed: () {
       signInWithGoogle().then((result) {
         if (result != null) {
+          DbHelper.currentUser = result;
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) {

@@ -25,10 +25,14 @@ class _StockListState extends State<StockList> {
     this.user = user;
     DbHelper.getUserWatchlist(user).then((value) {
       if (value != null) {
-        this.userWatchlist = value;
+        setState(() {
+          this.userWatchlist = value;
+        });
       } else {
         // Default values
-        this.userWatchlist = ["AAPL", "FB", "GOOG"];
+        setState(() {
+          this.userWatchlist = ["AAPL", "FB", "GOOG"];
+        });
       }
     });
   }
@@ -98,7 +102,9 @@ class _StockListState extends State<StockList> {
               },
             );
           } else
-            return Container();
+            return Container(
+              child: Center(child: Text("Add some stocks that interest you")),
+            );
         });
   }
 }
