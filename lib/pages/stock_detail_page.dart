@@ -23,11 +23,35 @@ class StockDetail extends StatefulWidget {
 class _StockDetailState extends State {
   Stock stock;
   int chartTimeInterval = 90;
+  List<bool> isSelected = [false, true, false];
   _StockDetailState({this.stock});
 
   void onTimeIntervalPressed(int timeInterval) {
     setState(() {
       chartTimeInterval = timeInterval;
+    });
+  }
+
+  switchTimeInterval(int index) {
+    setState(() {
+      for (int i = 0; i < isSelected.length; ++i) {
+        if (i == index) {
+          isSelected[i] = true;
+        } else {
+          isSelected[i] = false;
+        }
+      }
+      switch (index) {
+        case 0:
+          onTimeIntervalPressed(30);
+          break;
+        case 1:
+          onTimeIntervalPressed(90);
+          break;
+        case 2:
+          onTimeIntervalPressed(360);
+          break;
+      }
     });
   }
 
@@ -83,22 +107,23 @@ class _StockDetailState extends State {
                 }
               }),
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            RaisedButton(
-              onPressed: () => onTimeIntervalPressed(30),
-              child: const Text('Month', style: TextStyle(fontSize: 10)),
-            ),
-            RaisedButton(
-              onPressed: () => onTimeIntervalPressed(90),
-              child: const Text('Quarter', style: TextStyle(fontSize: 10)),
-            ),
-            RaisedButton(
-              onPressed: () => onTimeIntervalPressed(365),
-              child: const Text('Year', style: TextStyle(fontSize: 10)),
-            ),
-          ],
+        Padding(
+          padding: const EdgeInsets.only(top: 4.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ToggleButtons(
+                constraints: BoxConstraints(minWidth: 40.0, minHeight: 34.0),
+                children: <Widget>[
+                  const Text('Month', style: TextStyle(fontSize: 10)),
+                  const Text('Quarter', style: TextStyle(fontSize: 10)),
+                  const Text('Year', style: TextStyle(fontSize: 10)),
+                ],
+                onPressed: (index) => switchTimeInterval(index),
+                isSelected: isSelected,
+              ),
+            ],
+          ),
         ),
         FutureBuilder<String>(
             future: HttpHelper.fetchStockDescription(stock.symbol),
