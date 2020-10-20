@@ -108,9 +108,9 @@ class _StockDetailState extends State {
                   title: Text('Company description'),
                   children: [
                     Padding(
-                      padding: const EdgeInsets.all(4.0),
+                      padding: const EdgeInsets.all(6.0),
                       child: Text(
-                          UIHelper.truncateWithEllipsis(800, snapshot.data)),
+                          UIHelper.truncateWithEllipsis(600, snapshot.data)),
                     ),
                   ],
                 );
@@ -135,8 +135,10 @@ class _StockDetailState extends State {
 Widget _actionsPopup(String ticker) => PopupMenuButton<int>(
       itemBuilder: (context) => [
         PopupMenuItem(
-          value: 1,
-          child: Text("Add to watchlist"),
+          value: DbHelper.checkRemovePossible(ticker) ? 2 : 1,
+          child: DbHelper.checkRemovePossible(ticker)
+              ? Text("Remove from watchlist")
+              : Text("Add to watchlist"),
         ),
         PopupMenuDivider(),
         PopupMenuItem(
@@ -148,7 +150,8 @@ Widget _actionsPopup(String ticker) => PopupMenuButton<int>(
         if (value == 1) {
           DbHelper.addToWatchlist(ticker);
         } else if (value == 2) {
-          //DbHelper.removeFromWatchlist(ticker);
+          DbHelper.removeFromWatchlist(ticker);
+          _actionsPopup(ticker);
         } else {
           // DbHelper.addToPortfolio();
         }

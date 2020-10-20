@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 class DbHelper {
   static User currentUser;
+  static List<String> watchlist;
   static Future<List<String>> getUserWatchlist(User user) async {
     final querySnapshot = await FirebaseFirestore.instance
         .collection("watchlist")
@@ -15,6 +16,7 @@ class DbHelper {
     } else {
       list = List<String>.from(result);
     }
+    watchlist = list;
     return list;
   }
 
@@ -26,11 +28,27 @@ class DbHelper {
     final userRef =
         FirebaseFirestore.instance.collection("watchlist").doc(currentUser.uid);
     // Append to watched_stocks
-    userRef
-        .update({
-          'watched_stocks': FieldValue.arrayUnion(['$ticker'])
-        })
-        .then((value) => print("Updated"))
-        .catchError((error) => print("Failed to update user: $error"));
+    userRef.update({
+      'watched_stocks': FieldValue.arrayUnion(['$ticker'])
+    }).then((value) {
+      print("Updated");
+      watchlist.add(ticker);
+    }).catchError((error) => print("Failed to update watchlist: $error"));
+  }
+
+  static void removeFromWatchlist(String ticker) async {
+    final userRef =
+        FirebaseFirestore.instance.collection("watchlist").doc(currentUser.uid);
+    // Remove from watched_stocks
+    userRef.update({
+      'watched_stocks': FieldValue.arrayRemove(['$ticker'])
+    }).then((value) {
+      print("Updated");
+      watchlist.remove(ticker);
+    }).catchError((error) => print("Failed to update watchlist: $error"));
+  }
+
+  static bool checkRemovePossible(String ticker) {
+    return watchlist.contains(ticker);
   }
 }

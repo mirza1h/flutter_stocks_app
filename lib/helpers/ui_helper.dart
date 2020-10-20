@@ -25,4 +25,15 @@ class UIHelper {
     }
     return trcString;
   }
+
+  static String formatAmount(double amount) {
+    var nf = NumberFormat.compactCurrency(
+        locale: "en_US", decimalDigits: 3, symbol: '\$');
+    return nf.format(amount);
+  }
+
+  static String formatVolume(int volume) {
+    var nf = NumberFormat.compact();
+    return nf.format(volume);
+  }
 }

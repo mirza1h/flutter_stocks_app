@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:stocks_app/helpers/ui_helper.dart';
 import 'package:stocks_app/models/stock.dart';
 
 class StockInfo extends StatelessWidget {
@@ -22,22 +23,22 @@ class StockInfo extends StatelessWidget {
         ListTile(
           leading: FaIcon(FontAwesomeIcons.shoppingCart),
           title: Text("Market capitalization"),
-          trailing: Text("${stock.marketCap}"),
+          trailing: Text(UIHelper.formatAmount(stock.marketCap)),
         ),
         ListTile(
           leading: FaIcon(FontAwesomeIcons.dollarSign),
           title: Text("Day low"),
-          trailing: Text("${stock.dayLow}"),
+          trailing: Text("\$${stock.dayLow}"),
         ),
         ListTile(
           leading: FaIcon(FontAwesomeIcons.dollarSign),
           title: Text("Day high"),
-          trailing: Text("${stock.dayHigh}"),
+          trailing: Text("\$${stock.dayHigh}"),
         ),
         ListTile(
           leading: FaIcon(FontAwesomeIcons.database),
           title: Text("Volume"),
-          trailing: Text("${stock.volume}"),
+          trailing: Text(UIHelper.formatVolume(stock.volume)),
         ),
         ListTile(
           leading: FaIcon(FontAwesomeIcons.businessTime),
