@@ -95,7 +95,19 @@ class _StockDetailState extends State {
                   return Padding(
                     padding: const EdgeInsets.only(top: 10.0),
                     child: Container(
-                      height: 200.0,
+                      height: 220,
+                      margin: EdgeInsets.all(4.0),
+                      decoration: BoxDecoration(
+                        color: Colors.black54,
+                        borderRadius: BorderRadius.circular(8.0),
+                        boxShadow: [
+                          BoxShadow(
+                              color: Color.fromRGBO(0, 0, 0, 0.35),
+                              blurRadius: 8.0),
+                        ],
+                      ),
+                      padding:
+                          EdgeInsets.symmetric(vertical: 10.0, horizontal: 6.0),
                       child: new OHLCVGraph(
                           data: snapshot.data.stockChart,
                           enableGridLines: true,
