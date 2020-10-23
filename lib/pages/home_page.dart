@@ -2,11 +2,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:stocks_app/helpers/db_helper.dart';
 import 'package:stocks_app/pages/portfolio_page.dart';
 import 'package:stocks_app/pages/watchlist_page.dart';
 import 'package:stocks_app/widgets/stock_search.dart';
 import 'package:stocks_app/widgets/sign_in.dart';
+import 'package:stocks_app/main.dart';
 
 import 'login_page.dart';
 import 'news_page.dart';
@@ -21,7 +21,7 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState(user);
 }
 
-class _HomePageState extends State {
+class _HomePageState extends State with RouteAware {
   User user;
   int _selectedIndex = 1;
   final _pages = [];
@@ -116,5 +116,30 @@ class _HomePageState extends State {
         onTap: _onItemTapped,
       ),
     );
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    routeObserver.subscribe(this, ModalRoute.of(context));
+  }
+
+  @override
+  void dispose() {
+    routeObserver.unsubscribe(this);
+    super.dispose();
+  }
+
+  @override
+  void didPush() {
+    // Route was pushed onto navigator and is now topmost route.
+    print("PUSHED");
+    // Refresh
+    setState(() {});
+  }
+
+  @override
+  void didPopNext() {
+    // Covering route was popped off the navigator.
   }
 }

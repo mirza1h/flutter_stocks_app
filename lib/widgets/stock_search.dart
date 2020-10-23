@@ -21,7 +21,7 @@ class StockSearch extends SearchDelegate<String> {
 
   @override
   Widget buildResults(BuildContext context) {
-    return Container();
+    return buildSuggestions(context);
   }
 
   @override

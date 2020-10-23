@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:stocks_app/pages/login_page.dart';
 
-import 'pages/home_page.dart';
+// Register the RouteObserver as a navigation observer.
+final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 
 void main() {
-  runApp(App());
+  runApp(
+    App(),
+  );
 }
 
 class App extends StatelessWidget {
@@ -13,6 +16,7 @@ class App extends StatelessWidget {
     return MaterialApp(
       title: "Stocks",
       home: LoginPage(),
+      navigatorObservers: [routeObserver],
     );
   }
 }

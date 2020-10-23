@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:stocks_app/helpers/ui_helper.dart';
 
 class Portfolio extends StatelessWidget {
   Portfolio({Key key}) : super(key: key);
