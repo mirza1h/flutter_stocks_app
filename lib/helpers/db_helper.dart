@@ -31,7 +31,7 @@ class DbHelper {
     userRef.update({
       'watched_stocks': FieldValue.arrayUnion(['$ticker'])
     }).then((value) {
-      print("Updated");
+      print("Added");
       watchlist.add(ticker);
     }).catchError((error) => print("Failed to update watchlist: $error"));
   }
@@ -43,12 +43,15 @@ class DbHelper {
     userRef.update({
       'watched_stocks': FieldValue.arrayRemove(['$ticker'])
     }).then((value) {
-      print("Updated");
+      print("Removed");
       watchlist.remove(ticker);
     }).catchError((error) => print("Failed to update watchlist: $error"));
   }
 
-  static bool checkRemovePossible(String ticker) {
-    return watchlist.contains(ticker);
+  static bool checkRemovePossible(String ticker, bool forWatchlist) {
+    if (forWatchlist)
+      return watchlist.contains(ticker);
+    else
+      return false;
   }
 }

@@ -1,17 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:stocks_app/models/stock.dart';
 
 // Create a Form widget.
 class BuyForm extends StatefulWidget {
+  final Stock stock;
+  BuyForm({Key key, this.stock});
   @override
-  BuyFormState createState() {
-    return BuyFormState();
+  _BuyFormState createState() {
+    return _BuyFormState(stock: stock);
   }
 }
 
-class BuyFormState extends State<BuyForm> {
+class _BuyFormState extends State<BuyForm> {
+  Stock stock;
   int numberOfStocks;
   double price;
   final _formKey = GlobalKey<FormState>();
+  _BuyFormState({this.stock});
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +24,7 @@ class BuyFormState extends State<BuyForm> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.amber[800],
-        title: Text("Add a buy transaction"),
+        title: Text("Add a buy transaction for ${this.stock.symbol}"),
       ),
       body: Builder(
         builder: (context) => Center(
@@ -78,10 +83,14 @@ class BuyFormState extends State<BuyForm> {
                       padding: const EdgeInsets.symmetric(vertical: 24.0),
                       child: RaisedButton(
                         onPressed: () {
+                          FocusScope.of(context).unfocus();
                           if (_formKey.currentState.validate()) {
                             Scaffold.of(context).showSnackBar(
                                 SnackBar(content: Text('Position added')));
-                            Navigator.pop(context);
+                            new Future.delayed(
+                                const Duration(milliseconds: 1500), () {
+                              Navigator.pop(context);
+                            });
                           }
                         },
                         child: Text('Confirm'),

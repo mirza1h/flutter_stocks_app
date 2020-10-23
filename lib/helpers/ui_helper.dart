@@ -27,13 +27,19 @@ class UIHelper {
   }
 
   static String formatAmount(double amount) {
-    var nf = NumberFormat.compactCurrency(
-        locale: "en_US", decimalDigits: 3, symbol: '\$');
-    return nf.format(amount);
+    if (amount != null) {
+      var nf = NumberFormat.compactCurrency(
+          locale: "en_US", decimalDigits: 3, symbol: '\$');
+      return nf.format(amount);
+    } else
+      return "N/A";
   }
 
   static String formatVolume(int volume) {
-    var nf = NumberFormat.compact();
-    return nf.format(volume);
+    if (volume != null) {
+      var nf = NumberFormat.compact();
+      return nf.format(volume);
+    } else
+      return "N/A";
   }
 }

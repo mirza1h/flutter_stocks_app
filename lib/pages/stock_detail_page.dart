@@ -1,6 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_candlesticks/flutter_candlesticks.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:stocks_app/helpers/db_helper.dart';
 import 'package:stocks_app/helpers/http_helper.dart';
 import 'package:stocks_app/helpers/ui_helper.dart';
@@ -59,7 +60,7 @@ class _StockDetailState extends State {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: () async {
+      onWillPop: () {
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) {
@@ -72,7 +73,7 @@ class _StockDetailState extends State {
         appBar: AppBar(
           backgroundColor: Colors.amber[800],
           title: Text(this.stock.name + " (" + this.stock.symbol + ")"),
-          actions: [_actionsPopup(this.stock.symbol, context)],
+          actions: [_actionsPopup(this.stock, context)],
         ),
         body: Column(children: [
           Container(
@@ -159,31 +160,37 @@ class _StockDetailState extends State {
   }
 }
 
-Widget _actionsPopup(String ticker, BuildContext context) {
+Widget _actionsPopup(Stock stock, BuildContext context) {
+  final isWatchlistRemovePossible =
+      DbHelper.checkRemovePossible(stock.symbol, true);
+  final isPortfolioRemovePossible =
+      DbHelper.checkRemovePossible(stock.symbol, false);
   return PopupMenuButton<int>(
     itemBuilder: (context) => [
       PopupMenuItem(
-        value: DbHelper.checkRemovePossible(ticker) ? 2 : 1,
-        child: DbHelper.checkRemovePossible(ticker)
+        value: isWatchlistRemovePossible ? 2 : 1,
+        child: isWatchlistRemovePossible
             ? Text("Remove from watchlist")
             : Text("Add to watchlist"),
       ),
       PopupMenuDivider(),
       PopupMenuItem(
-        value: 3,
-        child: Text("Add to portfolio"),
+        value: isPortfolioRemovePossible ? 4 : 3,
+        child: isPortfolioRemovePossible
+            ? Text("Remove from portfolio")
+            : Text("Add to portfolio"),
       ),
     ],
     onSelected: (value) {
       if (value == 1) {
-        DbHelper.addToWatchlist(ticker);
-        _actionsPopup(ticker, context);
+        DbHelper.addToWatchlist(stock.symbol);
       } else if (value == 2) {
-        DbHelper.removeFromWatchlist(ticker);
-        _actionsPopup(ticker, context);
+        DbHelper.removeFromWatchlist(stock.symbol);
+      } else if (value == 3) {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => BuyForm(stock: stock)));
       } else {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => BuyForm()));
+        print("Removed");
       }
     },
   );
