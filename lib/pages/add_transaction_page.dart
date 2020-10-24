@@ -2,21 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:stocks_app/models/stock.dart';
 
 // Create a Form widget.
-class BuyForm extends StatefulWidget {
+class Transaction extends StatefulWidget {
   final Stock stock;
-  BuyForm({Key key, this.stock});
+  Transaction({Key key, this.stock});
   @override
-  _BuyFormState createState() {
-    return _BuyFormState(stock: stock);
+  _TransactionState createState() {
+    return _TransactionState(stock: stock);
   }
 }
 
-class _BuyFormState extends State<BuyForm> {
+class _TransactionState extends State<Transaction> {
   Stock stock;
   int numberOfStocks;
   double price;
+  String type = "Buy";
   final _formKey = GlobalKey<FormState>();
-  _BuyFormState({this.stock});
+  _TransactionState({this.stock});
 
   @override
   Widget build(BuildContext context) {
@@ -24,20 +25,40 @@ class _BuyFormState extends State<BuyForm> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.amber[800],
-        title: Text("Add a buy transaction for ${this.stock.symbol}"),
+        title: Text("Add a position for ${this.stock.symbol}"),
       ),
       body: Builder(
         builder: (context) => Center(
             child: Form(
                 key: _formKey,
-                child: new ListView(
+                child: ListView(
                   padding: const EdgeInsets.symmetric(
                       horizontal: 24.0, vertical: 24),
                   children: <Widget>[
+                    RadioListTile<String>(
+                      title: const Text('Buy'),
+                      value: 'Buy',
+                      groupValue: type,
+                      onChanged: (value) {
+                        setState(() {
+                          type = value;
+                        });
+                      },
+                    ),
+                    RadioListTile<String>(
+                      title: const Text('Sell'),
+                      value: 'Sell',
+                      groupValue: type,
+                      onChanged: (value) {
+                        setState(() {
+                          type = value;
+                        });
+                      },
+                    ),
                     TextFormField(
                       decoration: InputDecoration(
-                          labelText: 'Quantity',
-                          hintText: 'Number of stocks bought'),
+                        labelText: 'Quantity',
+                      ),
                       keyboardType: TextInputType.number,
                       validator: (value) {
                         if (value.isEmpty) {
@@ -58,8 +79,7 @@ class _BuyFormState extends State<BuyForm> {
                       },
                     ),
                     TextFormField(
-                      decoration: InputDecoration(
-                          labelText: 'Price', hintText: 'Price at the time'),
+                      decoration: InputDecoration(labelText: 'At price'),
                       keyboardType: TextInputType.number,
                       validator: (value) {
                         if (value.isEmpty) {

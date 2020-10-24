@@ -6,7 +6,7 @@ import 'package:stocks_app/helpers/http_helper.dart';
 import 'package:stocks_app/helpers/ui_helper.dart';
 import 'package:stocks_app/models/stock.dart';
 import 'package:stocks_app/models/stock_chart.dart';
-import 'package:stocks_app/pages/buy_transaction_page.dart';
+import 'package:stocks_app/pages/add_transaction_page.dart';
 import 'package:stocks_app/widgets/stock_info.dart';
 
 import 'home_page.dart';
@@ -175,10 +175,7 @@ class _StockDetailState extends State {
 
 Widget _actionsPopup(
     Stock stock, BuildContext context, StreamController actionsRebuildCtr) {
-  bool isWatchlistRemovePossible =
-      DbHelper.checkRemovePossible(stock.symbol, true);
-  bool isPortfolioRemovePossible =
-      DbHelper.checkRemovePossible(stock.symbol, false);
+  bool isWatchlistRemovePossible = DbHelper.checkRemovePossible(stock.symbol);
   return PopupMenuButton<int>(
     itemBuilder: (context) => [
       PopupMenuItem(
@@ -189,10 +186,8 @@ Widget _actionsPopup(
       ),
       PopupMenuDivider(),
       PopupMenuItem(
-        value: isPortfolioRemovePossible ? 4 : 3,
-        child: isPortfolioRemovePossible
-            ? Text("Remove from portfolio")
-            : Text("Add to portfolio"),
+        value: 3,
+        child: Text("Add transaction"),
       ),
     ],
     onSelected: (value) {
@@ -202,9 +197,7 @@ Widget _actionsPopup(
         DbHelper.removeFromWatchlist(stock.symbol, context, actionsRebuildCtr);
       } else if (value == 3) {
         Navigator.push(context,
-            MaterialPageRoute(builder: (context) => BuyForm(stock: stock)));
-      } else {
-        print("Removed");
+            MaterialPageRoute(builder: (context) => Transaction(stock: stock)));
       }
     },
   );

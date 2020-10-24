@@ -9,29 +9,28 @@ import 'package:stocks_app/pages/stock_detail_page.dart';
 
 class StockList extends StatefulWidget {
   User user;
-  StockList(User user) {
+  bool isWatchlist;
+  StockList(User user, bool isWatchlist) {
     this.user = user;
+    this.isWatchlist = isWatchlist;
   }
   @override
   State<StatefulWidget> createState() {
-    return _StockListState(user);
+    return _StockListState(user, isWatchlist);
   }
 }
 
 class _StockListState extends State<StockList> {
   User user;
   var userWatchlist;
-  _StockListState(User user) {
+  bool isWatchlist;
+  _StockListState(User user, bool isWatchlist) {
     this.user = user;
+    this.isWatchlist = isWatchlist;
     DbHelper.getUserWatchlist(user).then((value) {
       if (value != null) {
         setState(() {
           this.userWatchlist = value;
-        });
-      } else {
-        // Default values
-        setState(() {
-          this.userWatchlist = ["AAPL", "FB", "GOOG"];
         });
       }
     });
@@ -43,6 +42,8 @@ class _StockListState extends State<StockList> {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return ListView.separated(
+              scrollDirection: Axis.vertical,
+              shrinkWrap: true,
               physics: const AlwaysScrollableScrollPhysics(),
               separatorBuilder: (context, index) {
                 return Divider(color: Colors.grey);
@@ -57,7 +58,7 @@ class _StockListState extends State<StockList> {
                         MaterialPageRoute(
                             builder: (context) => StockDetail(stock: stock)))
                   },
-                  title: Column(
+                  leading: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
@@ -78,24 +79,43 @@ class _StockListState extends State<StockList> {
                   ),
                   trailing: Column(
                     children: [
-                      Text(
-                        "\$${stock.price}",
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 18,
-                        ),
-                      ),
-                      Container(
-                          alignment: Alignment.center,
-                          width: 75,
-                          height: 25,
-                          decoration: BoxDecoration(
-                              color: Colors.grey[100],
-                              borderRadius: BorderRadius.circular(5)),
-                          child: Text(
-                            "${stock.change}",
-                            style: UIHelper.returnChangeColor(stock.change),
-                          )),
+                      this.isWatchlist
+                          ? Text(
+                              "\$${stock.price}",
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 18,
+                              ),
+                            )
+                          : Text(
+                              "\$" +
+                                  (stock.price * stock.quantity)
+                                      .toStringAsFixed(2),
+                              style: TextStyle(
+                                color: UIHelper.returnChangeColor(stock.change)
+                                    .color,
+                                fontSize: 18,
+                              ),
+                            ),
+                      this.isWatchlist
+                          ? Container(
+                              alignment: Alignment.center,
+                              width: 75,
+                              height: 25,
+                              decoration: BoxDecoration(
+                                  color: Colors.grey[100],
+                                  borderRadius: BorderRadius.circular(5)),
+                              child: Text(
+                                "${stock.change}",
+                                style: UIHelper.returnChangeColor(stock.change),
+                              ))
+                          : Text(
+                              "${stock.quantity}",
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 18,
+                              ),
+                            ),
                     ],
                   ),
                 );

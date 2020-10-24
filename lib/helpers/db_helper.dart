@@ -57,10 +57,7 @@ class DbHelper {
     }).catchError((error) => print("Failed to update watchlist: $error"));
   }
 
-  static bool checkRemovePossible(String ticker, bool forWatchlist) {
-    if (forWatchlist)
-      return watchlist.contains(ticker);
-    else
-      return false;
+  static bool checkRemovePossible(String ticker) {
+    return watchlist.contains(ticker);
   }
 }

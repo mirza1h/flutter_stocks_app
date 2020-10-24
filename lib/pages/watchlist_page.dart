@@ -15,6 +15,6 @@ class Watchlist extends StatelessWidget {
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
         color: Colors.white,
-        child: StockList(user));
+        child: StockList(user, true));
   }
 }

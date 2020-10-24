@@ -7,8 +7,8 @@ import 'package:stocks_app/models/stock.dart';
 import 'package:stocks_app/models/stock_chart.dart';
 import 'package:stocks_app/models/stock_day.dart';
 
-final apiKey = "apikey=0aa8fabc3a8472e2a2a6c644611d099d";
-//final apiKey = "apikey=0f84eefd406b8a64546a654de489da30";
+//final apiKey = "apikey=0aa8fabc3a8472e2a2a6c644611d099d";
+final apiKey = "apikey=0f84eefd406b8a64546a654de489da30";
 final baseURL = "https://financialmodelingprep.com/api/v3/";
 
 class HttpHelper {
