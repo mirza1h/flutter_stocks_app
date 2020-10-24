@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_candlesticks/flutter_candlesticks.dart';
 import 'package:stocks_app/helpers/db_helper.dart';
@@ -26,6 +25,7 @@ class _StockDetailState extends State {
   Stock stock;
   int chartTimeInterval = 90;
   List<bool> isSelected = [false, true, false];
+  StreamController<bool> actionsRebuildCtr = StreamController<bool>();
   _StockDetailState({this.stock});
 
   void onTimeIntervalPressed(int timeInterval) {
@@ -58,6 +58,12 @@ class _StockDetailState extends State {
   }
 
   @override
+  void dispose() {
+    actionsRebuildCtr.close();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () {
@@ -73,7 +79,14 @@ class _StockDetailState extends State {
         appBar: AppBar(
           backgroundColor: Colors.amber[800],
           title: Text(this.stock.name + " (" + this.stock.symbol + ")"),
-          actions: [_actionsPopup(this.stock, context)],
+          actions: [
+            StreamBuilder(
+              stream: actionsRebuildCtr.stream,
+              builder: (context, snapshot) {
+                return _actionsPopup(this.stock, context, actionsRebuildCtr);
+              },
+            )
+          ],
         ),
         body: Column(children: [
           Container(
@@ -160,10 +173,11 @@ class _StockDetailState extends State {
   }
 }
 
-Widget _actionsPopup(Stock stock, BuildContext context) {
-  final isWatchlistRemovePossible =
+Widget _actionsPopup(
+    Stock stock, BuildContext context, StreamController actionsRebuildCtr) {
+  bool isWatchlistRemovePossible =
       DbHelper.checkRemovePossible(stock.symbol, true);
-  final isPortfolioRemovePossible =
+  bool isPortfolioRemovePossible =
       DbHelper.checkRemovePossible(stock.symbol, false);
   return PopupMenuButton<int>(
     itemBuilder: (context) => [
@@ -183,9 +197,9 @@ Widget _actionsPopup(Stock stock, BuildContext context) {
     ],
     onSelected: (value) {
       if (value == 1) {
-        DbHelper.addToWatchlist(stock.symbol);
+        DbHelper.addToWatchlist(stock.symbol, context, actionsRebuildCtr);
       } else if (value == 2) {
-        DbHelper.removeFromWatchlist(stock.symbol);
+        DbHelper.removeFromWatchlist(stock.symbol, context, actionsRebuildCtr);
       } else if (value == 3) {
         Navigator.push(context,
             MaterialPageRoute(builder: (context) => BuyForm(stock: stock)));

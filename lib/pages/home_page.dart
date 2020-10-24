@@ -133,7 +133,6 @@ class _HomePageState extends State with RouteAware {
   @override
   void didPush() {
     // Route was pushed onto navigator and is now topmost route.
-    print("PUSHED");
     // Refresh
     setState(() {});
   }

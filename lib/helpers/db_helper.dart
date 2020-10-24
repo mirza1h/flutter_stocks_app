@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 
 class DbHelper {
   static User currentUser;
@@ -24,27 +27,33 @@ class DbHelper {
     currentUser = user;
   }
 
-  static void addToWatchlist(String ticker) async {
+  static void addToWatchlist(String ticker, BuildContext context,
+      StreamController actionsRebuildCtr) async {
     final userRef =
         FirebaseFirestore.instance.collection("watchlist").doc(currentUser.uid);
     // Append to watched_stocks
     userRef.update({
       'watched_stocks': FieldValue.arrayUnion(['$ticker'])
     }).then((value) {
-      print("Added");
+      Scaffold.of(context).showSnackBar(SnackBar(
+          duration: Duration(seconds: 1), content: Text('Position added')));
       watchlist.add(ticker);
+      actionsRebuildCtr.add(true);
     }).catchError((error) => print("Failed to update watchlist: $error"));
   }
 
-  static void removeFromWatchlist(String ticker) async {
+  static void removeFromWatchlist(String ticker, BuildContext context,
+      StreamController actionsRebuildCtr) async {
     final userRef =
         FirebaseFirestore.instance.collection("watchlist").doc(currentUser.uid);
     // Remove from watched_stocks
     userRef.update({
       'watched_stocks': FieldValue.arrayRemove(['$ticker'])
     }).then((value) {
-      print("Removed");
+      Scaffold.of(context).showSnackBar(
+          SnackBar(duration: Duration(seconds: 1), content: Text('Removed')));
       watchlist.remove(ticker);
+      actionsRebuildCtr.add(true);
     }).catchError((error) => print("Failed to update watchlist: $error"));
   }
 
