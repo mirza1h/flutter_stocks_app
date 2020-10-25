@@ -23,7 +23,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State with RouteAware {
   User user;
-  int _selectedIndex = 1;
+  int _selectedIndex = 2;
   final _pages = [];
 
   _HomePageState(User user) {

@@ -31,6 +31,24 @@ class HttpHelper {
     return stocks;
   }
 
+  static Future<List<Stock>> fetchPortfolioStocks(List<Stock> dbStocks) async {
+    String queryString = "";
+    for (int i = 0; i < dbStocks.length; ++i) {
+      queryString += dbStocks[i].symbol + ",";
+    }
+    var url = baseURL + "quote/" + queryString + "?" + apiKey;
+    final response = await http.get(url);
+    List<Stock> stocks = (json.decode(response.body) as List).map((i) {
+      return Stock.fromJson(i);
+    }).toList();
+    for (int i = 0; i < dbStocks.length; ++i) {
+      stocks[i].quantity = dbStocks[i].quantity;
+      stocks[i].soldAt = dbStocks[i].soldAt;
+      stocks[i].boughtAt = dbStocks[i].boughtAt;
+    }
+    return stocks;
+  }
+
   static Future<StockChart> fetchStockHistoricalData(
       String stockTicker, int interval) async {
     var url = baseURL +

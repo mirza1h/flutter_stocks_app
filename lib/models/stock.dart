@@ -10,9 +10,9 @@ class Stock {
   final String exchange;
   final double open;
   final String earningsAnnouncement;
-  final int quantity = 12;
-  final double boughtAt = 21.43;
-  final double soldAt;
+  int quantity;
+  double boughtAt;
+  double soldAt;
 
   Stock(
       {this.dayLow,
@@ -26,17 +26,11 @@ class Stock {
       this.symbol,
       this.price,
       this.change,
+      this.quantity,
+      this.boughtAt,
       this.soldAt});
 
   factory Stock.fromJson(Map<String, dynamic> json) {
-    var earningsAnnouncement = json['earningsAnnouncement'];
-    if (earningsAnnouncement != null) {
-      try {
-        earningsAnnouncement = earningsAnnouncement.toString().substring(0, 10);
-      } catch (e) {
-        print(e);
-      }
-    }
     return Stock(
       name: json['name'],
       symbol: json['symbol'],

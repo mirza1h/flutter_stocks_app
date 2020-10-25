@@ -22,23 +22,35 @@ class StockList extends StatefulWidget {
 
 class _StockListState extends State<StockList> {
   User user;
-  var userWatchlist;
+  var stockList;
   bool isWatchlist;
   _StockListState(User user, bool isWatchlist) {
     this.user = user;
     this.isWatchlist = isWatchlist;
-    DbHelper.getUserWatchlist(user).then((value) {
-      if (value != null) {
-        setState(() {
-          this.userWatchlist = value;
-        });
-      }
-    });
+    if (isWatchlist == true) {
+      DbHelper.getUserWatchlist(user).then((value) {
+        if (value != null) {
+          setState(() {
+            this.stockList = value;
+          });
+        }
+      });
+    } else {
+      DbHelper.getUserPortfolio(user).then((value) {
+        if (value != null) {
+          setState(() {
+            this.stockList = value;
+          });
+        }
+      });
+    }
   }
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Stock>>(
-        future: HttpHelper.fetchStocks(this.userWatchlist),
+        future: this.isWatchlist
+            ? HttpHelper.fetchStocks(this.stockList)
+            : HttpHelper.fetchPortfolioStocks(this.stockList),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return ListView.separated(
@@ -89,7 +101,7 @@ class _StockListState extends State<StockList> {
                             )
                           : Text(
                               "\$" +
-                                  (stock.price * stock.quantity)
+                                  (stock.price * stock.quantity ?? 1)
                                       .toStringAsFixed(2),
                               style: TextStyle(
                                 color: UIHelper.returnChangeColor(stock.change)

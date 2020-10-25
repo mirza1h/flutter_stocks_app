@@ -3,10 +3,13 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:stocks_app/models/stock.dart';
 
 class DbHelper {
   static User currentUser;
   static List<String> watchlist;
+  static List<Stock> portfolio;
+
   static Future<List<String>> getUserWatchlist(User user) async {
     final querySnapshot = await FirebaseFirestore.instance
         .collection("watchlist")
@@ -21,6 +24,24 @@ class DbHelper {
     }
     watchlist = list;
     return list;
+  }
+
+  static Future<List<Stock>> getUserPortfolio(User user) async {
+    final querySnapshot = await FirebaseFirestore.instance
+        .collection("portfolio")
+        .doc(user.uid)
+        .collection("stocks")
+        .get();
+    final stockCollection = querySnapshot.docs;
+    List<Stock> result = new List<Stock>();
+    stockCollection.forEach((e) => {
+          result.add(Stock(
+              symbol: e.id,
+              quantity: e.data()['quantity'],
+              boughtAt: e.data()['boughtAt'].toDouble(),
+              soldAt: e.data()['soldAt'].toDouble()))
+        });
+    return result;
   }
 
   static void setUser(User user) {
