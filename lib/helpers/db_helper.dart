@@ -8,7 +8,7 @@ import 'package:stocks_app/models/stock.dart';
 class DbHelper {
   static User currentUser;
   static List<String> watchlist;
-  static List<Stock> portfolio;
+  static List<String> portfolio;
 
   static Future<List<String>> getUserWatchlist(User user) async {
     final querySnapshot = await FirebaseFirestore.instance
@@ -34,13 +34,15 @@ class DbHelper {
         .get();
     final stockCollection = querySnapshot.docs;
     List<Stock> result = new List<Stock>();
-    stockCollection.forEach((e) => {
-          result.add(Stock(
-              symbol: e.id,
-              quantity: e.data()['quantity'],
-              boughtAt: e.data()['boughtAt'].toDouble(),
-              soldAt: e.data()['soldAt'].toDouble()))
-        });
+    portfolio = new List<String>();
+    stockCollection.forEach((e) {
+      portfolio.add(e.id);
+      result.add(Stock(
+          symbol: e.id,
+          quantity: e.data()['quantity'],
+          boughtAt: e.data()['boughtAt'].toDouble(),
+          soldAt: e.data()['soldAt'].toDouble()));
+    });
     return result;
   }
 
@@ -56,8 +58,8 @@ class DbHelper {
     userRef.update({
       'watched_stocks': FieldValue.arrayUnion(['$ticker'])
     }).then((value) {
-      Scaffold.of(context).showSnackBar(SnackBar(
-          duration: Duration(seconds: 1), content: Text('Position added')));
+      Scaffold.of(context).showSnackBar(
+          SnackBar(duration: Duration(seconds: 1), content: Text('Added')));
       watchlist.add(ticker);
       actionsRebuildCtr.add(true);
     }).catchError((error) => print("Failed to update watchlist: $error"));
@@ -80,5 +82,28 @@ class DbHelper {
 
   static bool checkRemovePossible(String ticker) {
     return watchlist.contains(ticker);
+  }
+
+  static bool checkSellPossible(String ticker) {
+    return portfolio.contains(ticker);
+  }
+
+  static void addToPortfolio(Stock stock, BuildContext context) async {
+    final userRef = FirebaseFirestore.instance
+        .collection("portfolio")
+        .doc(currentUser.uid)
+        .collection("stocks");
+    // Add to portfolio
+    userRef.doc(stock.symbol).set({
+      "boughtAt": stock.boughtAt ?? 0,
+      "quantity": stock.quantity,
+      "soldAt": stock.soldAt ?? 0,
+    }).then((value) {
+      Scaffold.of(context).showSnackBar(SnackBar(
+          duration: Duration(seconds: 1), content: Text('Position added')));
+      new Future.delayed(const Duration(milliseconds: 1000), () {
+        Navigator.pop(context);
+      });
+    }).catchError((error) => print("Failed to add: $error"));
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:stocks_app/helpers/db_helper.dart';
 import 'package:stocks_app/models/stock.dart';
 
 // Create a Form widget.
@@ -45,16 +46,18 @@ class _TransactionState extends State<Transaction> {
                         });
                       },
                     ),
-                    RadioListTile<String>(
-                      title: const Text('Sell'),
-                      value: 'Sell',
-                      groupValue: type,
-                      onChanged: (value) {
-                        setState(() {
-                          type = value;
-                        });
-                      },
-                    ),
+                    DbHelper.checkSellPossible(this.stock.symbol)
+                        ? RadioListTile<String>(
+                            title: const Text('Sell'),
+                            value: 'Sell',
+                            groupValue: type,
+                            onChanged: (value) {
+                              setState(() {
+                                type = value;
+                              });
+                            },
+                          )
+                        : Container(),
                     TextFormField(
                       decoration: InputDecoration(
                         labelText: 'Quantity',
@@ -71,7 +74,10 @@ class _TransactionState extends State<Transaction> {
                             if (numericValue < 0) {
                               return 'Number must be positive';
                             } else {
-                              this.numberOfStocks = numericValue;
+                              if (this.stock.quantity - numericValue < 0)
+                                return 'You have only ${this.stock.quantity} stocks of ${this.stock.symbol}';
+                              else
+                                this.numberOfStocks = numericValue;
                             }
                           }
                         }
@@ -103,14 +109,20 @@ class _TransactionState extends State<Transaction> {
                       padding: const EdgeInsets.symmetric(vertical: 24.0),
                       child: RaisedButton(
                         onPressed: () {
-                          FocusScope.of(context).unfocus();
                           if (_formKey.currentState.validate()) {
+                            if (type == "Buy") {
+                              stock.boughtAt = this.price;
+                              stock.quantity =
+                                  stock.quantity + this.numberOfStocks;
+                            } else {
+                              stock.soldAt = this.price;
+                              stock.quantity =
+                                  stock.quantity - this.numberOfStocks;
+                            }
+                            FocusScope.of(context).unfocus();
                             Scaffold.of(context).showSnackBar(
                                 SnackBar(content: Text('Position added')));
-                            new Future.delayed(
-                                const Duration(milliseconds: 1500), () {
-                              Navigator.pop(context);
-                            });
+                            DbHelper.addToPortfolio(stock, context);
                           }
                         },
                         child: Text('Confirm'),

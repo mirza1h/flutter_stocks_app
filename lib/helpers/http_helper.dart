@@ -12,6 +12,9 @@ final apiKey = "apikey=0f84eefd406b8a64546a654de489da30";
 final baseURL = "https://financialmodelingprep.com/api/v3/";
 
 class HttpHelper {
+  static double portfolioWorth = 0;
+  static double portfolioChange = 0;
+
   static Future<Stock> fetchStock(String stockTicker) async {
     var url = baseURL + "quote/" + stockTicker + "?" + apiKey;
     final response = await http.get(url);
@@ -41,11 +44,15 @@ class HttpHelper {
     List<Stock> stocks = (json.decode(response.body) as List).map((i) {
       return Stock.fromJson(i);
     }).toList();
+    portfolioWorth = 0;
     for (int i = 0; i < dbStocks.length; ++i) {
       stocks[i].quantity = dbStocks[i].quantity;
       stocks[i].soldAt = dbStocks[i].soldAt;
       stocks[i].boughtAt = dbStocks[i].boughtAt;
+      portfolioWorth += stocks[i].quantity * stocks[i].price;
+      portfolioChange += stocks[i].change;
     }
+    portfolioChange /= stocks.length;
     return stocks;
   }
 
@@ -81,7 +88,7 @@ class HttpHelper {
         "search-ticker?" +
         "query=" +
         query.toUpperCase() +
-        "&limit=10&exchange=NASDAQ" +
+        "&limit=6&exchange=NASDAQ" +
         "&" +
         apiKey;
     final response = await http.get(url);

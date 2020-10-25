@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:stocks_app/helpers/db_helper.dart';
+import 'package:stocks_app/helpers/http_helper.dart';
+import 'package:stocks_app/helpers/ui_helper.dart';
+import 'package:stocks_app/pages/home_page.dart';
 
 class PortfolioHeader extends StatefulWidget {
   PortfolioHeader({Key key}) : super(key: key);
@@ -35,12 +39,21 @@ class _PortfolioHeaderState extends State<PortfolioHeader> {
                   children: [
                     Padding(
                       padding: const EdgeInsets.only(right: 8.0),
-                      child: Text("\$" + 435.51.toString(),
+                      child: Text(
+                          "\$" + HttpHelper.portfolioWorth.toStringAsFixed(2),
                           style: TextStyle(fontSize: 36)),
                     ),
                     IconButton(
                       icon: Icon(Icons.refresh),
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return HomePage(user: DbHelper.currentUser);
+                            },
+                          ),
+                        );
+                      },
                     ),
                   ]),
             ),
@@ -56,9 +69,11 @@ Widget percentChange() {
     alignment: Alignment.topRight,
     child: RichText(
       text: TextSpan(
-        text: "+3.67%",
+        text: HttpHelper.portfolioChange.toStringAsFixed(2) + "%",
         style: TextStyle(
-            fontWeight: FontWeight.bold, color: Colors.green, fontSize: 20),
+            fontWeight: FontWeight.bold,
+            color: UIHelper.returnChangeColor(HttpHelper.portfolioChange).color,
+            fontSize: 20),
       ),
     ),
   );

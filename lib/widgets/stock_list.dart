@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -10,13 +12,15 @@ import 'package:stocks_app/pages/stock_detail_page.dart';
 class StockList extends StatefulWidget {
   User user;
   bool isWatchlist;
-  StockList(User user, bool isWatchlist) {
+  StreamController headerRebuildCtr;
+  StockList(User user, bool isWatchlist, StreamController headerRebuildCtr) {
     this.user = user;
     this.isWatchlist = isWatchlist;
+    this.headerRebuildCtr = headerRebuildCtr;
   }
   @override
   State<StatefulWidget> createState() {
-    return _StockListState(user, isWatchlist);
+    return _StockListState(user, isWatchlist, headerRebuildCtr);
   }
 }
 
@@ -24,9 +28,13 @@ class _StockListState extends State<StockList> {
   User user;
   var stockList;
   bool isWatchlist;
-  _StockListState(User user, bool isWatchlist) {
+  StreamController headerRebuildCtr;
+  _StockListState(
+      User user, bool isWatchlist, StreamController headerRebuildCtr) {
     this.user = user;
     this.isWatchlist = isWatchlist;
+    this.headerRebuildCtr = headerRebuildCtr;
+
     if (isWatchlist == true) {
       DbHelper.getUserWatchlist(user).then((value) {
         if (value != null) {
@@ -50,7 +58,10 @@ class _StockListState extends State<StockList> {
     return FutureBuilder<List<Stock>>(
         future: this.isWatchlist
             ? HttpHelper.fetchStocks(this.stockList)
-            : HttpHelper.fetchPortfolioStocks(this.stockList),
+            : HttpHelper.fetchPortfolioStocks(this.stockList).then((value) {
+                headerRebuildCtr.add(true);
+                return value;
+              }),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return ListView.separated(
