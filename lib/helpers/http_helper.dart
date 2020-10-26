@@ -21,7 +21,8 @@ class HttpHelper {
     return Stock.fromJson(jsonDecode(response.body)[0]);
   }
 
-  static Future<List<Stock>> fetchStocks(List<String> stockTickers) async {
+  static Future<List<Stock>> fetchWatchedStocks(
+      List<String> stockTickers) async {
     String queryString = "";
     for (int i = 0; i < stockTickers.length; ++i) {
       queryString += stockTickers[i] + ",";

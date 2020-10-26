@@ -15,23 +15,13 @@ class _PortfolioHeaderState extends State<PortfolioHeader> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 6.0),
-      height: 140,
+      margin: const EdgeInsets.only(bottom: 10.0),
       child: Card(
         color: Colors.white70,
         shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
         child: Column(
           children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(18.0),
-              child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Text('Portfolio worth'),
-                    percentChange(),
-                  ]),
-            ),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Row(
@@ -43,18 +33,7 @@ class _PortfolioHeaderState extends State<PortfolioHeader> {
                           "\$" + HttpHelper.portfolioWorth.toStringAsFixed(2),
                           style: TextStyle(fontSize: 36)),
                     ),
-                    IconButton(
-                      icon: Icon(Icons.refresh),
-                      onPressed: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) {
-                              return HomePage(user: DbHelper.currentUser);
-                            },
-                          ),
-                        );
-                      },
-                    ),
+                    percentChange(),
                   ]),
             ),
           ],

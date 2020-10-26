@@ -23,12 +23,12 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State with RouteAware {
   User user;
-  int _selectedIndex = 2;
+  int _selectedIndex = 1;
   final _pages = [];
 
   _HomePageState(User user) {
     this.user = user;
-    _pages.add(News());
+    _pages.add(NewsPage());
     _pages.add(Watchlist(user));
     _pages.add(Portfolio());
   }
