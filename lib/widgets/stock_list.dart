@@ -152,7 +152,7 @@ class _StockListState extends State<StockList> {
                             ? Container(
                                 alignment: Alignment.center,
                                 width: 75,
-                                height: 25,
+                                height: 20,
                                 decoration: BoxDecoration(
                                     color: Colors.grey[100],
                                     borderRadius: BorderRadius.circular(5)),

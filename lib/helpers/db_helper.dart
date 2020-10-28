@@ -1,5 +1,6 @@
 import 'dart:async';
-
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:cloud_firestore_web/cloud_firestore_web.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -11,10 +12,18 @@ class DbHelper {
   static List<String> portfolio;
 
   static Future<List<String>> getUserWatchlist(User user) async {
-    final querySnapshot = await FirebaseFirestore.instance
-        .collection("watchlist")
-        .doc(user.uid)
-        .get();
+    var querySnapshot;
+    if (kIsWeb) {
+      querySnapshot = await FirebaseFirestoreWeb()
+          .collection("watchlist")
+          .doc(user.uid)
+          .get();
+    } else {
+      querySnapshot = await FirebaseFirestore.instance
+          .collection("watchlist")
+          .doc(user.uid)
+          .get();
+    }
     List<String> list = List<String>();
     final result = querySnapshot.data()["watched_stocks"];
     if (result is String) {
@@ -27,11 +36,20 @@ class DbHelper {
   }
 
   static Future<List<Stock>> getUserPortfolio(User user) async {
-    final querySnapshot = await FirebaseFirestore.instance
-        .collection("portfolio")
-        .doc(user.uid)
-        .collection("stocks")
-        .get();
+    var querySnapshot;
+    if (kIsWeb) {
+      querySnapshot = await FirebaseFirestoreWeb()
+          .collection("portfolio")
+          .doc(user.uid)
+          .collection("stocks")
+          .get();
+    } else {
+      querySnapshot = await FirebaseFirestore.instance
+          .collection("portfolio")
+          .doc(user.uid)
+          .collection("stocks")
+          .get();
+    }
     final stockCollection = querySnapshot.docs;
     List<Stock> result = new List<Stock>();
     portfolio = new List<String>();
@@ -53,7 +71,7 @@ class DbHelper {
   static void addToWatchlist(String ticker, BuildContext context,
       StreamController actionsRebuildCtr) async {
     final userRef =
-        FirebaseFirestore.instance.collection("watchlist").doc(currentUser.uid);
+        FirebaseFirestoreWeb().collection("watchlist").doc(currentUser.uid);
     // Append to watched_stocks
     userRef.update({
       'watched_stocks': FieldValue.arrayUnion(['$ticker'])
@@ -68,8 +86,8 @@ class DbHelper {
   static void removeFromWatchlist(String ticker, BuildContext context,
       StreamController actionsRebuildCtr) async {
     final userRef =
-        FirebaseFirestore.instance.collection("watchlist").doc(currentUser.uid);
-    // Remove from watched_stocks
+        FirebaseFirestoreWeb().collection("watchlist").doc(currentUser.uid);
+    //Remove from watched_stocks
     userRef.update({
       'watched_stocks': FieldValue.arrayRemove(['$ticker'])
     }).then((value) {
@@ -89,10 +107,18 @@ class DbHelper {
   }
 
   static void addToPortfolio(Stock stock, BuildContext context) async {
-    final userRef = FirebaseFirestore.instance
-        .collection("portfolio")
-        .doc(currentUser.uid)
-        .collection("stocks");
+    var userRef;
+    if (kIsWeb) {
+      userRef = FirebaseFirestoreWeb()
+          .collection("portfolio")
+          .doc(currentUser.uid)
+          .collection("stocks");
+    } else {
+      userRef = FirebaseFirestore.instance
+          .collection("portfolio")
+          .doc(currentUser.uid)
+          .collection("stocks");
+    }
     // Add to portfolio
     userRef.doc(stock.symbol).set({
       "boughtAt": stock.boughtAt ?? 0,

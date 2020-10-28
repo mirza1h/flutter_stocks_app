@@ -9,6 +9,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="apple-mobile-web-app-title" content="stocks_app">
+  <meta name="google-signin-client_id" content="507472512999-re7c2dtbp7oudqs80sc6bdh6h6ockeis.apps.googleusercontent.com">
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
 
   <!-- Favicon -->
@@ -28,6 +29,29 @@
       });
     }
   </script>
+  <!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/7.24.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.14.3/firebase-auth.js"></script>
+
+
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+
+<script>
+  // Your web app's Firebase configuration
+  var firebaseConfig = {
+    apiKey: "AIzaSyApMK-2woiMAUZ_q7-kIBchdRZk44FghLo",
+    authDomain: "stocks-app-web-522af.firebaseapp.com",
+    databaseURL: "https://stocks-app-web-522af.firebaseio.com",
+    projectId: "stocks-app-web-522af",
+    storageBucket: "stocks-app-web-522af.appspot.com",
+    messagingSenderId: "171764018245",
+    appId: "1:171764018245:web:6ba65b35bbf5690543472c"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+</script>
   <script src="main.dart.js" type="application/javascript"></script>
 </body>
 </html>
