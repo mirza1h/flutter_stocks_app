@@ -55,11 +55,13 @@ class DbHelper {
     portfolio = new List<String>();
     stockCollection.forEach((e) {
       portfolio.add(e.id);
-      result.add(Stock(
-          symbol: e.id,
-          quantity: e.data()['quantity'],
-          boughtAt: e.data()['boughtAt'].toDouble(),
-          soldAt: e.data()['soldAt'].toDouble()));
+      if (e.data()['quantity'] > 0) {
+        result.add(Stock(
+            symbol: e.id,
+            quantity: e.data()['quantity'],
+            boughtAt: e.data()['boughtAt'].toDouble(),
+            soldAt: e.data()['soldAt'].toDouble()));
+      }
     });
     return result;
   }
