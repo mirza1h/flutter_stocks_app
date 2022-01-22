@@ -1,16 +1,2 @@
-# stocks_app
-
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Cross-platform stock portfolio app created in Flutter as part of my Bachelor's thesis. The app works on Android, iOS and web.
+![image](https://user-images.githubusercontent.com/98211431/150634047-d062d0ce-fc3a-4a09-9ddd-a4f192b779d5.png)
